@@ -5,7 +5,8 @@
     "main": "app.js",
     "scripts": {
         "server-dev": "cross-env NODE_ENV=develop supervisor -i public app.js",
-        "server-prod": "cross-env NODE_ENV=production forever app.js",
+        "server-prod": "cross-env NODE_ENV=production forever start app.js",
+        "server-stop": "forever stop app.js",
         "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js"
     },
     "author": "liyifei",
