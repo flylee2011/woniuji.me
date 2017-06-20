@@ -5,4 +5,9 @@
  */
 
 require('../../css/page/index.css');
+
+setTimeout(function() {
+    $('#coming').css('display', 'block');
+}, 31 * 1000);
+
 // console.log('page/index.js');

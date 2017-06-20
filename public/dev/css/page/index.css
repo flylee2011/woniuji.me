@@ -6,11 +6,32 @@
     animation-duration: 3s;
 }
 .animate1 {
-    animation-delay: 2s;
+    animation-delay: 1s;
 }
 .animate2 {
-    animation-delay: 31s;
+    display: none;
 }
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+}
+
 .demo {
     max-width: 1000px;
     margin: 0 auto;
@@ -21,4 +42,9 @@
 }
 .demo .text-big {
     font-size: 18px;
+}
+.demo .cover-img {
+    border-radius: 100%;
+    animation: rotate 8s linear infinite;
+    -webkit-animation: rotate 8s linear infinite;
 }
