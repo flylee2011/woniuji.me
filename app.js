@@ -6,13 +6,11 @@
 // express
 var express = require('express');
 var bodyParser = require('body-parser');
+
+// webpack
+var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware;
 // 中间件
 // var browserSync = require('browser-sync').create();
-// webpack
-var webpack = require('webpack');
-var webpackConfig = require('./webpack.dev.js');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
 
 // 判断运行环境，env=develop || env=production
 var env = process.argv[2] || process.env.NODE_ENV;
@@ -26,8 +24,12 @@ var hostname = isDev ? 'local.woniuji.me' : 'woniuji.me';
 
 var app = express();
 
-// 中间件
 if (isDev) {
+    // 开发环境中间件
+    webpack = require('webpack');
+    webpackConfig = require('./webpack.dev.js');
+    webpackDevMiddleware = require('webpack-dev-middleware');
+    webpackHotMiddleware = require('webpack-hot-middleware');
     // webpack 开发环境
     app.use(webpackDevMiddleware(webpack(webpackConfig), {
         publicPath: webpackConfig.output.publicPath,
