@@ -6,8 +6,13 @@
 
 require('../../css/page/index.css');
 
-setTimeout(function() {
-    $('#coming').css('display', 'block');
-}, 31 * 1000);
+var audioObj = document.getElementById('audio');
+audioObj.play();
 
-// console.log('page/index.js');
+var intervalObj = setInterval(function() {
+    var currentTime = audioObj.currentTime;
+    if (currentTime > 32) {
+        $('#coming').css('display', 'block');
+        clearInterval(intervalObj);
+    }
+}, 1000);

@@ -8,7 +8,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 // webpack
-var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware;
+var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware, webpackCompiler;
 // 中间件
 // var browserSync = require('browser-sync').create();
 
@@ -30,13 +30,14 @@ if (isDev) {
     webpackConfig = require('./webpack.dev.js');
     webpackDevMiddleware = require('webpack-dev-middleware');
     webpackHotMiddleware = require('webpack-hot-middleware');
+    webpackCompiler = webpack(webpackConfig);
     // webpack 开发环境
-    app.use(webpackDevMiddleware(webpack(webpackConfig), {
+    app.use(webpackDevMiddleware(webpackCompiler, {
         publicPath: webpackConfig.output.publicPath,
         noInfo: true
     }));
     // webpack 热替换
-    app.use(webpackHotMiddleware(webpack(webpackConfig)));
+    app.use(webpackHotMiddleware(webpackCompiler));
 }
 // 解析 body
 app.use(bodyParser.json());
