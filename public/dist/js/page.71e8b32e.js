@@ -1,1 +1,0 @@
-webpackJsonp([1],[,function(n,c){},,function(n,c,e){(function(n){e(1);var c=document.getElementById("audio");c.play();var t=setInterval(function(){c.currentTime>32&&(n("#coming").css("display","block"),clearInterval(t))},1e3)}).call(c,e(0))}],[3]);

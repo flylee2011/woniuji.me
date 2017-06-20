@@ -5,12 +5,10 @@
     -webkit-animation-duration: 3s;
     animation-duration: 3s;
 }
-.animate1 {
+.delay1 {
     animation-delay: 1s;
 }
-.animate2 {
-    display: none;
-}
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
@@ -37,14 +35,32 @@
     margin: 0 auto;
     text-align: center;
 }
+.demo .coming {
+    display: none;
+}
 .demo .text-highlight {
     color: #FF66CC;
 }
 .demo .text-big {
     font-size: 18px;
 }
+.demo .img-box {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto;
+}
 .demo .cover-img {
     border-radius: 100%;
+}
+.demo .cover-img.ani-rotate {
     animation: rotate 8s linear infinite;
     -webkit-animation: rotate 8s linear infinite;
+}
+.demo .fa {
+    position: absolute;
+    font-size: 45px;
+    top: 33%;
+    left: 36%;
+    opacity: 0.6;
 }
