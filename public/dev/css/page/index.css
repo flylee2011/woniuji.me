@@ -35,7 +35,8 @@
     margin: 0 auto;
     text-align: center;
 }
-.demo .coming {
+.demo .coming,
+.demo .lrc {
     display: none;
 }
 .demo .text-highlight {

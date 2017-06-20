@@ -15,6 +15,7 @@ function onClickSong() {
     if (elIcon.hasClass('fa-play-circle')) {
         elIcon.attr('class', 'fa fa-pause-circle');
         elImg.addClass('ani-rotate');
+        $('#lrc-box').css('display', 'block');
         audioObj.play();
     } else {
         elIcon.attr('class', 'fa fa-play-circle');
@@ -23,9 +24,9 @@ function onClickSong() {
     }
 }
 
-function initPlay() {
-    onClickSong();
-}
+// function initPlay() {
+//     onClickSong();
+// }
 
 imgBox.on('click', function(e) {
     onClickSong();
@@ -40,4 +41,4 @@ var intervalObj = setInterval(function() {
     }
 }, 1000);
 
-initPlay();
+// initPlay();
