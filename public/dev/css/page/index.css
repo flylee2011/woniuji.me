@@ -1,0 +1,24 @@
+/* 入口 */
+@import url('../../../../node_modules/animate.css/animate.css');
+
+.animated {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+}
+.animate1 {
+    animation-delay: 2s;
+}
+.animate2 {
+    animation-delay: 31s;
+}
+.demo {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+.demo .text-highlight {
+    color: #FF66CC;
+}
+.demo .text-big {
+    font-size: 18px;
+}
