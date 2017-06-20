@@ -13,7 +13,6 @@ var webpack = require('webpack');
 var webpackConfig = require('./webpack.dev.js');
 var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
-var webpackCompiler = webpack(webpackConfig);
 
 // 判断运行环境，env=develop || env=production
 var env = process.argv[2] || process.env.NODE_ENV;
@@ -30,12 +29,12 @@ var app = express();
 // 中间件
 if (isDev) {
     // webpack 开发环境
-    app.use(webpackDevMiddleware(webpackCompiler, {
+    app.use(webpackDevMiddleware(webpack(webpackConfig), {
         publicPath: webpackConfig.output.publicPath,
         noInfo: true
     }));
     // webpack 热替换
-    app.use(webpackHotMiddleware(webpackCompiler));
+    app.use(webpackHotMiddleware(webpack(webpackConfig)));
 }
 // 解析 body
 app.use(bodyParser.json());
