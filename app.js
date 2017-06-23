@@ -6,6 +6,10 @@
 // express
 var express = require('express');
 var bodyParser = require('body-parser');
+// https
+var https = require('https');
+// 接口
+var user = require('./routers/api/user');
 
 // webpack
 var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware, webpackCompiler;
@@ -18,7 +22,7 @@ var isDev = (env == 'develop') ? true : false;
 // 静态文件目录
 var staticDir = isDev ? './public/dev/' : './public/dist/';
 // 监听端口号
-var listenPort = isDev ? 8001 : 1426;
+var listenPort = isDev ? 80 : 1426;
 // 域名配置
 var hostname = isDev ? 'local.woniuji.me' : 'woniuji.me';
 
@@ -40,7 +44,9 @@ if (isDev) {
     app.use(webpackHotMiddleware(webpackCompiler));
 }
 // 解析 body
+// for parsing application/json
 app.use(bodyParser.json());
+// for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -48,20 +54,14 @@ app.use(bodyParser.urlencoded({
 // 路由
 // 静态资源
 app.use('/', express.static(staticDir));
+// 接口
+app.use('/api', user);
 
 // 启动
 var server;
 if (isDev) {
     // 开发环境
     server = app.listen(listenPort, hostname, function() {
-        // browserSync.init({
-        //     open: false,
-        //     // ui: false,
-        //     notify: false,
-        //     proxy: 'localhost:8001',
-        //     files: [staticDir + '*.html'],
-        //     port: 8002
-        // });
         console.log('Running on ' + hostname + ':' + server.address().port + ' for Development...');
     });
 } else {
@@ -69,4 +69,6 @@ if (isDev) {
     server = app.listen(listenPort, hostname, function() {
         console.log('Running for Production...');
     });
+
+    // https.createServer({}, app).listen(8000);
 }
