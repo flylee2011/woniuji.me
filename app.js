@@ -3,6 +3,7 @@
  * @author liyifei<yifei@zoocer.com>
  * @date 2017/06
  */
+var fs = require('fs');
 // express
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -24,7 +25,12 @@ var staticDir = isDev ? './public/dev/' : './public/dist/';
 // 监听端口号
 var listenPort = isDev ? 80 : 1426;
 // 域名配置
-var hostname = isDev ? 'local.woniuji.me' : 'woniuji.me';
+var hostname = isDev ? 'woniuji.me' : 'woniuji.me';
+// https 证书配置
+var httpsOpt = {
+    key: fs.readFileSync('./config/214173991420403.key'),
+    cert: fs.readFileSync('./config/214173991420403.pem')
+};
 
 var app = express();
 
@@ -69,6 +75,5 @@ if (isDev) {
     server = app.listen(listenPort, hostname, function() {
         console.log('Running for Production...');
     });
-
-    // https.createServer({}, app).listen(8000);
 }
+https.createServer(httpsOpt, app).listen(443);
