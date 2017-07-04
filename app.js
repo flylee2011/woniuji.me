@@ -23,13 +23,13 @@ var isDev = (env == 'develop') ? true : false;
 // 静态文件目录
 var staticDir = isDev ? './public/dev/' : './public/dist/';
 // 监听端口号
-var listenPort = isDev ? 80 : 1426;
+var listenPort = isDev ? 8001 : 1426;
 // 域名配置
-var hostname = isDev ? 'woniuji.me' : 'woniuji.me';
+var hostname = isDev ? 'local.woniuji.cn' : 'woniuji.cn';
 // https 证书配置
 var httpsOpt = {
-    key: fs.readFileSync('./config/214173991420403.key'),
-    cert: fs.readFileSync('./config/214173991420403.pem')
+    key: fs.readFileSync('./config/214174505710403.key'),
+    cert: fs.readFileSync('./config/214174505710403.pem')
 };
 
 var app = express();
@@ -76,4 +76,4 @@ if (isDev) {
         console.log('Running for Production...');
     });
 }
-https.createServer(httpsOpt, app).listen(443);
+// https.createServer(httpsOpt, app).listen(443);
