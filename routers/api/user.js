@@ -80,6 +80,7 @@ router.get('/user/wxapp_autoreg', function(req, res) {
                 User.regWxappUser(deData, function(err, data) {
                     if (!err) {
                         apiResJson = getApiResJson(200, {
+                            id: data.insertId,
                             nickname: deData.nickName,
                             avatar: deData.avatarUrl,
                             gender: deData.gender
