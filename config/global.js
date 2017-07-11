@@ -9,9 +9,7 @@ module.exports = {
         appid: 'wx0f4f743f3cb0dc0b',
         secret: '7cbc6867b608bf3bfe2736bb8a6555b5'
     },
-    apiResJson: {
-        code: 500,
-        data: null,
-        message: 'system error'
+    api: {
+        pageSize: 10
     }
 };

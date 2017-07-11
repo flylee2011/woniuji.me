@@ -26,7 +26,7 @@ router.get('/wxapp_login', function(req, res) {
     var code = req.query.code;
     // 参数判断
     if (!code) {
-        res.send(getApiResJson(401));
+        res.send(getApiResJson(400));
     }
 
     // 参数
@@ -79,7 +79,7 @@ router.get('/wxapp_autoreg', function(req, res) {
     // 通过 sessionid 获取 sessionkey
     redisClient.get(sessionId, function(err, reply) {
         if (err || !reply) {
-            res.send(getApiResJson(500));
+            res.send(getApiResJson(401));
         }
 
         // 解密数据

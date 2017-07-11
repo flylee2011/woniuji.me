@@ -17,12 +17,20 @@ var getApiResJson = function(code, data) {
             apiResJson.data = data;
             apiResJson.message = 'success';
             break;
-        case 401:
+        case 400:
             // 缺少参数
+            apiResJson.data = null;
             apiResJson.message = 'no args';
+            break;
+        case 401:
+            // 登录状态失效
+            apiResJson.data = null;
+            apiResJson.message = 'need login';
             break;
         default:
             // 默认，服务器错误
+            apiResJson.data = null;
+            apiResJson.message = 'system error';
             break;
     }
     return apiResJson;

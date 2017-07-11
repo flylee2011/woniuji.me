@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var https = require('https');
 // 接口
 var user = require('./routers/api/user');
+var collection = require('./routers/api/collection');
 
 // webpack
 var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware, webpackCompiler;
@@ -62,6 +63,7 @@ app.use(bodyParser.urlencoded({
 app.use('/', express.static(staticDir));
 // 接口
 app.use('/api/user', user);
+app.use('/api/collection', collection);
 
 // 启动
 var server;
