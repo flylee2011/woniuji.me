@@ -61,7 +61,7 @@ app.use(bodyParser.urlencoded({
 // 静态资源
 app.use('/', express.static(staticDir));
 // 接口
-app.use('/api', user);
+app.use('/api/user', user);
 
 // 启动
 var server;
