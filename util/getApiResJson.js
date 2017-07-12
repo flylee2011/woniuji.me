@@ -19,7 +19,7 @@ var getApiResJson = function(code, data) {
             break;
         case 400:
             // 缺少参数
-            apiResJson.data = null;
+            apiResJson.data = data || null;
             apiResJson.message = 'no args';
             break;
         case 401:

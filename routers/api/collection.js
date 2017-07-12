@@ -98,7 +98,7 @@ router.post('/del', function(req, res) {
     };
     var sessionId = req.body.sessionId;
     // 检查参数
-    if (!reqData.id || !reqData.uid) {
+    if (!reqData.id || !reqData.uid || !sessionId) {
         res.send(getApiResJson(400));
     }
     // 检查 session
