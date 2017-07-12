@@ -49,15 +49,15 @@ Diary.delItem = function(params, callback) {
 Diary.getList = function(params, callback) {
     var sql = 'SELECT `id`, `img_url`, `content`, `like_count`, `comment_count` FROM ' + tableName;
     var sqlParams = {
-        whereField: '',
+        whereField: ' WHERE is_del = -1',
         order: params.order || 'like_count',
         limit: ((params.page - 1) * params.pageSize) + ',' + params.pageSize
     };
     if (params.uid) {
-        sqlParams.whereField = ' WHERE uid = ' + params.uid;
+        sqlParams.whereField = sqlParams.whereField + ' AND uid = ' + params.uid;
     }
     if (params.cid) {
-        sqlParams.whereField = ' WHERE cid = ' + params.cid;
+        sqlParams.whereField = sqlParams.whereField + ' AND cid = ' + params.cid;
     }
     sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + ' LIMIT ' + sqlParams.limit;
 
@@ -74,13 +74,13 @@ Diary.getList = function(params, callback) {
 Diary.getListCount = function(params, callback) {
     var sql = 'SELECT COUNT(*) AS count FROM ' + tableName;
     var sqlParams = {
-        whereField: ''
+        whereField: ' WHERE is_del = -1'
     };
     if (params.uid) {
-        sqlParams.whereField = ' WHERE uid = ' + params.uid;
+        sqlParams.whereField = sqlParams.whereField + ' AND uid = ' + params.uid;
     }
     if (params.cid) {
-        sqlParams.whereField = ' WHERE cid = ' + params.cid;
+        sqlParams.whereField = sqlParams.whereField + ' AND cid = ' + params.cid;
     }
     sql = sql + sqlParams.whereField;
 

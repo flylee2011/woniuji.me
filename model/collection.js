@@ -25,6 +25,7 @@ Collection.insertItem = function(params, callback) {
         callback(false, res);
     });
 };
+
 // 更新
 Collection.updateItem = function(params, callback) {
     var sql = 'UPDATE ' + tableName + ' SET cover_url = ?, title = ?, description = ? WHERE id = ? AND uid = ?';
@@ -44,6 +45,7 @@ Collection.updateItem = function(params, callback) {
         callback(false, res);
     });
 };
+
 // 删除
 Collection.delItem = function(params, callback) {
     var sql = 'UPDATE ' + tableName + ' SET is_del = 1 WHERE id = ? AND uid = ?';
@@ -60,14 +62,18 @@ Collection.delItem = function(params, callback) {
         callback(false, res);
     });
 };
+
 // 获取列表
 Collection.getList = function(params, callback) {
     var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableName;
     var sqlParams = {
-        whereField: params.uid ? ' WHERE is_del = -1 AND uid = ' + params.uid : ' WHERE is_del = -1',
+        whereField: ' WHERE is_del = -1',
         order: params.order || 'update_time',
         limit: ((params.page - 1) * params.pageSize) + ',' + params.pageSize
     };
+    if (params.uid) {
+        sqlParams.whereField = sqlParams.whereField + ' AND uid = ' + params.uid;
+    }
     sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + ' LIMIT ' + sqlParams.limit;
 
     db.query(sql, [], function(err, res) {
@@ -78,6 +84,27 @@ Collection.getList = function(params, callback) {
         callback(false, res);
     });
 };
+
+// 获取列表总数
+Collection.getListCount = function(params, callback) {
+    var sql = 'SELECT COUNT(*) AS count FROM ' + tableName;
+    var sqlParams = {
+        whereField: ' WHERE is_del = -1'
+    };
+    if (params.uid) {
+        sqlParams.whereField = sqlParams.whereField + ' AND uid = ' + params.uid;
+    }
+    sql = sql + sqlParams.whereField;
+
+    db.query(sql, [], function(err, res) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        callback(false, res);
+    });
+};
+
 // 根据 id 获取详情
 Collection.getDetail = function(params, callback) {
     var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableName + ' WHERE is_del = -1 AND id = ?';

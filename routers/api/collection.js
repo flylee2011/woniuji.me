@@ -11,9 +11,9 @@ var globalConfig = require('../../config/global');
 // api 返回 json
 var getApiResJson = require('../../util/getApiResJson');
 // 数据模型
-var Collection = require('../../model/collection');
-// redis
-var redisClient = require('../../database/redis');
+var collectionModel = require('../../model/collection');
+// 检查登录状态
+var checkLogin = require('../../util/checkLogin');
 
 /**
  * 新增梦想录
@@ -35,12 +35,14 @@ router.post('/add', function(req, res) {
     if (!reqData.uid || !reqData.title || !sessionId) {
         res.send(getApiResJson(400));
     }
-    // 检查 session
-    redisClient.get(sessionId, function(err, reply) {
-        if (err || !reply) {
+    // 检查登录状态
+    checkLogin(sessionId, function(code) {
+        if (code != 200) {
+            // 登录态失效
             res.send(getApiResJson(401));
         }
-        Collection.insertItem(reqData, function(err, data) {
+        // 操作数据模型
+        collectionModel.insertItem(reqData, function(err, data) {
             if (err) {
                 res.send(getApiResJson(500));
             }
@@ -50,6 +52,7 @@ router.post('/add', function(req, res) {
         });
     });
 });
+
 /**
  * 更新梦想录
  * @param int id 条目id required
@@ -72,12 +75,14 @@ router.post('/update', function(req, res) {
     if (!reqData.id || !reqData.uid || !reqData.title || !reqData.coverUrl || !reqData.desc || !sessionId) {
         res.send(getApiResJson(400));
     }
-    // 检查 session
-    redisClient.get(sessionId, function(err, reply) {
-        if (err || !reply) {
+    // 检查登录状态
+    checkLogin(sessionId, function(code) {
+        if (code != 200) {
+            // 登录态失效
             res.send(getApiResJson(401));
         }
-        Collection.updateItem(reqData, function(err, data) {
+        // 操作数据模型
+        collectionModel.updateItem(reqData, function(err, data) {
             if (err) {
                 res.send(getApiResJson(500));
             }
@@ -85,6 +90,7 @@ router.post('/update', function(req, res) {
         });
     });
 });
+
 /**
  * 删除梦想录
  * @param int id 条目id required
@@ -101,12 +107,13 @@ router.post('/del', function(req, res) {
     if (!reqData.id || !reqData.uid || !sessionId) {
         res.send(getApiResJson(400));
     }
-    // 检查 session
-    redisClient.get(sessionId, function(err, reply) {
-        if (err || !reply) {
+    // 检查登录状态
+    checkLogin(sessionId, function(code) {
+        if (code != 200) {
+            // 登录态失效
             res.send(getApiResJson(401));
         }
-        Collection.delItem(reqData, function(err, data) {
+        collectionModel.delItem(reqData, function(err, data) {
             if (err) {
                 res.send(getApiResJson(500));
             }
@@ -114,6 +121,7 @@ router.post('/del', function(req, res) {
         });
     });
 });
+
 /**
  * 梦想录列表
  * @param int page 页码 默认1
@@ -128,13 +136,26 @@ router.get('/list', function(req, res) {
         order: req.query.order || 'update_time',
         uid: parseInt(req.query.uid)
     };
-    Collection.getList(reqData, function(err, data) {
+    var listData = [];
+    var listCount = 0;
+    collectionModel.getList(reqData, function(err, data) {
         if (err) {
             res.send(getApiResJson(500));
         }
-        res.send(getApiResJson(200, data));
+        listData = data;
+        collectionModel.getListCount(reqData, function(err, data) {
+            if (err) {
+                res.send(getApiResJson(500));
+            }
+            listCount = data;
+            res.send(getApiResJson(200, {
+                list: listData,
+                total_count: listCount
+            }));
+        });
     });
 });
+
 /**
  * 梦想录详情
  * @param int id 条目id required
@@ -147,7 +168,7 @@ router.get('/detail', function(req, res) {
     if (!reqData.id) {
         res.send(getApiResJson(400));
     }
-    Collection.getDetail(reqData, function(err, data) {
+    collectionModel.getDetail(reqData, function(err, data) {
         if (err) {
             res.send(getApiResJson(500));
         }
