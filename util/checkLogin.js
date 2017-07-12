@@ -4,7 +4,7 @@
  * @date 2017/07
  */
 // redis
-var redisClient = require('../../database/redis');
+var redisClient = require('../database/redis');
 
 // 通过检查 sessionid 判断登录状态，用于需要登录权限的接口
 var checkLogin = function(sessionId, callback) {

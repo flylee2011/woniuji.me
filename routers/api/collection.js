@@ -113,6 +113,7 @@ router.post('/del', function(req, res) {
             // 登录态失效
             res.send(getApiResJson(401));
         }
+        // 操作数据模型
         collectionModel.delItem(reqData, function(err, data) {
             if (err) {
                 res.send(getApiResJson(500));
@@ -138,6 +139,7 @@ router.get('/list', function(req, res) {
     };
     var listData = [];
     var listCount = 0;
+    // 操作数据模型
     collectionModel.getList(reqData, function(err, data) {
         if (err) {
             res.send(getApiResJson(500));
@@ -168,6 +170,7 @@ router.get('/detail', function(req, res) {
     if (!reqData.id) {
         res.send(getApiResJson(400));
     }
+    // 操作数据模型
     collectionModel.getDetail(reqData, function(err, data) {
         if (err) {
             res.send(getApiResJson(500));

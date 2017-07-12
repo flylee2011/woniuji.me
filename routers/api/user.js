@@ -16,7 +16,7 @@ var WXBizDataCrypt = require('../../util/WXBizDataCrypt');
 // api 返回 json
 var getApiResJson = require('../../util/getApiResJson');
 // 数据模型
-var User = require('../../model/user');
+var userModel = require('../../model/user');
 // redis
 var redisClient = require('../../database/redis');
 
@@ -88,7 +88,7 @@ router.get('/wxapp_autoreg', function(req, res) {
         deData = pc.decryptData(encryptedData, iv);
 
         // 检查是否有这个用户
-        User.getWxappUserByOpenid({
+        userModel.getWxappUserByOpenid({
             openid: deData.openId
         }, function(err, data) {
             if (err) {
@@ -99,7 +99,7 @@ router.get('/wxapp_autoreg', function(req, res) {
                 res.send(getApiResJson(200, data[0]));
             } else {
                 // 没有这个用户，自动注册
-                User.regWxappUser(deData, function(err, data) {
+                userModel.regWxappUser(deData, function(err, data) {
                     if (err) {
                         res.send(getApiResJson(500));
                     }
@@ -115,24 +115,57 @@ router.get('/wxapp_autoreg', function(req, res) {
     });
 });
 
-// 更新用户基础信息
-router.post('/update_userinfo', multer().array(), function(req, res) {
+/**
+ * 列表
+ * @param int page 页码 默认1
+ * @param int pageSize 每页条数 默认10
+ * @param string order 排序字段 默认 update_time
+ */
+router.get('/list', function(req, res) {
     var reqData = {
-        id: req.body.id,
-        username: req.body.username,
-        gender: req.body.gender,
-        motto: req.body.motto
+        page: req.query.page || 1,
+        pageSize: req.query.pageSize || globalConfig.api.pageSize,
+        order: req.query.order || 'update_time'
     };
-    User.updateUserinfo(reqData, function(err, data) {
+    var listData = [];
+    var listCount = 0;
+    // 操作数据模型
+    userModel.getList(reqData, function(err, data) {
         if (err) {
-            apiResJson.data = err;
-        } else {
-            apiResJson.data = data;
-            apiResJson.code = 200;
-            apiResJson.message = 'success';
+            res.send(getApiResJson(500));
         }
-        res.send(apiResJson);
+        listData = data;
+        userModel.getListCount(reqData, function(err, data) {
+            if (err) {
+                res.send(getApiResJson(500));
+            }
+            listCount = data;
+            res.send(getApiResJson(200, {
+                list: listData,
+                total_count: listCount
+            }));
+        });
     });
 });
+
+// // 更新用户基础信息
+// router.post('/update_userinfo', multer().array(), function(req, res) {
+//     var reqData = {
+//         id: req.body.id,
+//         username: req.body.username,
+//         gender: req.body.gender,
+//         motto: req.body.motto
+//     };
+//     userModel.updateUserinfo(reqData, function(err, data) {
+//         if (err) {
+//             apiResJson.data = err;
+//         } else {
+//             apiResJson.data = data;
+//             apiResJson.code = 200;
+//             apiResJson.message = 'success';
+//         }
+//         res.send(apiResJson);
+//     });
+// });
 
 module.exports = router;

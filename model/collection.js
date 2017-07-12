@@ -84,7 +84,6 @@ Collection.getList = function(params, callback) {
         callback(false, res);
     });
 };
-
 // 获取列表总数
 Collection.getListCount = function(params, callback) {
     var sql = 'SELECT COUNT(*) AS count FROM ' + tableName;
