@@ -92,3 +92,5 @@ Diary.getListCount = function(params, callback) {
         callback(false, res);
     });
 };
+
+module.exports = Diary;

@@ -9,7 +9,7 @@ var tableName = 'user';
 
 // 根据 openid 查询用户（微信）
 User.getWxappUserByOpenid = function(params, callback) {
-    var sql = 'SELECT `id`, `email`, `nickname`, `avatar`, `cover_url`, `gender`, `motto`, `score`, `plat`, `is_lock`, `create_time`, `update_time` FROM ' + tableName + ' WHERE wx_openid = ? AND is_del = -1 LIMIT 1';
+    var sql = 'SELECT `id`, `email`, `nickname`, `avatar_url`, `cover_url`, `gender`, `motto`, `score`, `plat`, `is_lock`, `create_time`, `update_time` FROM ' + tableName + ' WHERE wx_openid = ? AND is_del = -1 LIMIT 1';
 
     db.query(sql, [params.openid], function(err, res) {
         if (err) {
@@ -24,7 +24,7 @@ User.regWxappUser = function(params, callback) {
     var sql = 'INSERT INTO ' + tableName + ' SET ?';
     params = {
         nickname: params.nickName,
-        avatar: params.avatarUrl,
+        avatar_url: params.avatarUrl,
         gender: params.gender,
         wx_openid: params.openId,
         plat: 'weixin'
@@ -40,7 +40,7 @@ User.regWxappUser = function(params, callback) {
 
 // 获取列表
 User.getList = function(params, callback) {
-    var sql = 'SELECT `id`, `email`, `nickname`, `avatar`, `cover_url`, `gender`, `motto`, `score`, `plat`, `is_lock`, `create_time`, `update_time` FROM ' + tableName;
+    var sql = 'SELECT `id`, `email`, `nickname`, `avatar_url`, `cover_url`, `gender`, `motto`, `score`, `plat`, `is_lock`, `create_time`, `update_time` FROM ' + tableName;
     var sqlParams = {
         whereField: ' WHERE is_del = -1',
         order: params.order || 'update_time',
@@ -65,6 +65,19 @@ User.getListCount = function(params, callback) {
     sql = sql + sqlParams.whereField;
 
     db.query(sql, [], function(err, res) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        callback(false, res);
+    });
+};
+
+// 根据 uid 查询用户信息
+User.getUserInfoById = function(params, callback) {
+    var sql = 'SELECT `id`, `email`, `nickname`, `avatar_url`, `cover_url`, `gender`, `motto`, `score`, `plat`, `is_lock`, `create_time`, `update_time` FROM ' + tableName + ' WHERE id = ? AND is_del = -1 LIMIT 1';
+
+    db.query(sql, [params.uid], function(err, res) {
         if (err) {
             callback(err);
             return;

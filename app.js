@@ -12,6 +12,7 @@ var https = require('https');
 // 接口
 var user = require('./routers/api/user');
 var collection = require('./routers/api/collection');
+var diary = require('./routers/api/diary');
 
 // webpack
 var webpack, webpackConfig, webpackDevMiddleware, webpackHotMiddleware, webpackCompiler;
@@ -64,6 +65,7 @@ app.use('/', express.static(staticDir));
 // 接口
 app.use('/api/user', user);
 app.use('/api/collection', collection);
+app.use('/api/diary', diary);
 
 // 启动
 var server;

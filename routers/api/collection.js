@@ -149,7 +149,7 @@ router.get('/list', function(req, res) {
             if (err) {
                 res.send(getApiResJson(500));
             }
-            listCount = data;
+            listCount = data[0].count;
             res.send(getApiResJson(200, {
                 list: listData,
                 total_count: listCount

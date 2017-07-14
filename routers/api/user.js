@@ -20,7 +20,10 @@ var userModel = require('../../model/user');
 // redis
 var redisClient = require('../../database/redis');
 
-// 微信登录，获取用户登录凭证
+/**
+ * 微信登录，获取用户登录凭证
+ * @param string code wx.login获得 required
+ */
 router.get('/wxapp_login', function(req, res) {
     // 接收参数，wx.login 获得的 code
     var code = req.query.code;
@@ -65,7 +68,12 @@ router.get('/wxapp_login', function(req, res) {
         });
     });
 });
-// 微信小程序，自动注册
+/**
+ * 微信小程序，自动注册。没有该用户自动注册，有用户返回用户信息
+ * @param string encryptedData 加密字段
+ * @param string iv 加密字段
+ * @param string sessionId 经过计算加密的登录 session 信息，用来验证登录状态
+ */
 router.get('/wxapp_autoreg', function(req, res) {
     // 接收参数
     var encryptedData = req.query.encryptedData;
@@ -106,7 +114,7 @@ router.get('/wxapp_autoreg', function(req, res) {
                     res.send(getApiResJson(200, {
                         id: data.insertId,
                         nickname: deData.nickName,
-                        avatar: deData.avatarUrl,
+                        avatarUrl: deData.avatarUrl,
                         gender: deData.gender
                     }));
                 });
@@ -145,6 +153,27 @@ router.get('/list', function(req, res) {
                 total_count: listCount
             }));
         });
+    });
+});
+
+/**
+ * 根据 uid 获取用户信息
+ * @param int uid 用户id required
+ */
+router.get('/get_userinfo', function(req, res) {
+    var reqData = {
+        uid: parseInt(req.query.uid)
+    };
+    // 检查参数
+    if (!reqData.uid) {
+        res.send(getApiResJson(400));
+    }
+    // 操作数据模型
+    userModel.getUserInfoById(reqData, function(err, data) {
+        if (err) {
+            res.send(getApiResJson(500));
+        }
+        res.send(getApiResJson(200, data[0]));
     });
 });
 
