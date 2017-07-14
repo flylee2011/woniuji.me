@@ -87,10 +87,10 @@ User.getUserInfoById = function(params, callback) {
 };
 
 // 更新用户基础信息
-User.updateUserinfo = function(params, callback) {
-    var sql = 'UPDATE user SET username = ?, gender = ?, motto = ? WHERE id = ?';
+User.updateUserInfo = function(params, callback) {
+    var sql = 'UPDATE ' + tableName + ' SET nickname = ?, gender = ?, motto = ? WHERE id = ?';
 
-    db.query(sql, [params.username, params.gender, params.motto, params.id], function(err, res) {
+    db.query(sql, [params.nickname, params.gender, params.motto, params.uid], function(err, res) {
         if (err) {
             callback(err);
             return;

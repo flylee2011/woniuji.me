@@ -177,24 +177,39 @@ router.get('/get_userinfo', function(req, res) {
     });
 });
 
-// // 更新用户基础信息
-// router.post('/update_userinfo', multer().array(), function(req, res) {
-//     var reqData = {
-//         id: req.body.id,
-//         username: req.body.username,
-//         gender: req.body.gender,
-//         motto: req.body.motto
-//     };
-//     userModel.updateUserinfo(reqData, function(err, data) {
-//         if (err) {
-//             apiResJson.data = err;
-//         } else {
-//             apiResJson.data = data;
-//             apiResJson.code = 200;
-//             apiResJson.message = 'success';
-//         }
-//         res.send(apiResJson);
-//     });
-// });
+/**
+ * 更新用户基础信息
+ * @param int uid 用户id required
+ * @param string sessionId 身份验证 required
+ * @param string nickname 昵称 require
+ * @param int gender 性别
+ * @param string motto 个人简介
+ */
+router.post('/update_userinfo', function(req, res) {
+    var reqData = {
+        uid: parseInt(req.body.uid),
+        nickname: req.body.nickname,
+        gender: req.body.gender,
+        motto: req.body.motto
+    };
+    var sessionId = req.body.sessionId;
+    // 检查参数
+    if (!reqData.uid || !reqData.nickname || !sessionId) {
+        res.send(getApiResJson(400));
+    }
+    // 检查 sessionid
+    redisClient.get(sessionId, function(err, reply) {
+        if (err || !reply) {
+            res.send(getApiResJson(401));
+        }
+        // 操作模型
+        userModel.updateUserInfo(reqData, function(err, data) {
+            if (err) {
+                res.send(getApiResJson(500));
+            }
+            res.send(getApiResJson(200, data));
+        });
+    });
+});
 
 module.exports = router;
