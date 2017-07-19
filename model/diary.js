@@ -58,6 +58,7 @@ Diary.getList = function(params, callback) {
     var sqlParams = {
         whereField: ' WHERE `diary`.is_del = -1',
         order: '`diary`.' + params.order || '`diary`.like_count',
+        rank: ' DESC ',
         limit: ((params.page - 1) * params.pageSize) + ',' + params.pageSize
     };
     if (params.uid) {
@@ -66,7 +67,7 @@ Diary.getList = function(params, callback) {
     if (params.cid) {
         sqlParams.whereField = sqlParams.whereField + ' AND `diary`.cid = ' + params.cid;
     }
-    sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + ' LIMIT ' + sqlParams.limit;
+    sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + sqlParams.rank + ' LIMIT ' + sqlParams.limit;
 
     db.query(sql, [], function(err, res) {
         if (err) {
