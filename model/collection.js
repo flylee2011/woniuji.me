@@ -5,11 +5,12 @@
  */
 var db = require('../database/mysql');
 var Collection = {};
-var tableName = 'diary_collection';
+var tableCollection = 'diary_collection';
+var tableDiary = 'diary';
 
 // 新增
 Collection.insertItem = function(params, callback) {
-    var sql = 'INSERT INTO ' + tableName + ' SET ?';
+    var sql = 'INSERT INTO ' + tableCollection + ' SET ?';
     var sqlParams = {
         uid: params.uid,
         cover_url: params.coverUrl,
@@ -28,7 +29,7 @@ Collection.insertItem = function(params, callback) {
 
 // 更新
 Collection.updateItem = function(params, callback) {
-    var sql = 'UPDATE ' + tableName + ' SET cover_url = ?, title = ?, description = ? WHERE id = ? AND uid = ?';
+    var sql = 'UPDATE ' + tableCollection + ' SET cover_url = ?, title = ?, description = ? WHERE id = ? AND uid = ?';
     var sqlParams = {
         id: params.id,
         uid: params.uid,
@@ -46,9 +47,12 @@ Collection.updateItem = function(params, callback) {
     });
 };
 
-// 删除
+// 删除，级联删除梦想录下的所有轨迹
 Collection.delItem = function(params, callback) {
-    var sql = 'UPDATE ' + tableName + ' SET is_del = 1 WHERE id = ? AND uid = ?';
+    var updateSet = 'UPDATE ' + tableCollection + ' , ' + tableDiary + ' SET ' + tableCollection + '.is_del = 1, ' + tableDiary + '.is_del = 1';
+    var whereStr = ' WHERE ' + tableDiary + '.cid = ' + tableCollection + '.id ' + ' AND ' + tableCollection + '.id = ?' + ' AND ' + tableCollection + '.uid = ?';
+    var sql = updateSet + whereStr;
+
     var sqlParams = {
         id: params.id,
         uid: params.uid
@@ -65,16 +69,17 @@ Collection.delItem = function(params, callback) {
 
 // 获取列表
 Collection.getList = function(params, callback) {
-    var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableName;
+    var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableCollection;
     var sqlParams = {
         whereField: ' WHERE is_del = -1',
-        order: params.order || 'update_time',
+        order: params.order,
+        rank: ' DESC ',
         limit: ((params.page - 1) * params.pageSize) + ',' + params.pageSize
     };
     if (params.uid) {
         sqlParams.whereField = sqlParams.whereField + ' AND uid = ' + params.uid;
     }
-    sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + ' LIMIT ' + sqlParams.limit;
+    sql = sql + sqlParams.whereField + ' ORDER BY ' + sqlParams.order + sqlParams.rank + ' LIMIT ' + sqlParams.limit;
 
     db.query(sql, [], function(err, res) {
         if (err) {
@@ -86,7 +91,7 @@ Collection.getList = function(params, callback) {
 };
 // 获取列表总数
 Collection.getListCount = function(params, callback) {
-    var sql = 'SELECT COUNT(*) AS count FROM ' + tableName;
+    var sql = 'SELECT COUNT(*) AS count FROM ' + tableCollection;
     var sqlParams = {
         whereField: ' WHERE is_del = -1'
     };
@@ -106,7 +111,7 @@ Collection.getListCount = function(params, callback) {
 
 // 根据 id 获取详情
 Collection.getDetail = function(params, callback) {
-    var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableName + ' WHERE is_del = -1 AND id = ?';
+    var sql = 'SELECT `id`, `cover_url`, `title`, `description` FROM ' + tableCollection + ' WHERE is_del = -1 AND id = ?';
     var sqlParams = {
         id: params.id
     };

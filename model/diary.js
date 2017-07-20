@@ -57,7 +57,7 @@ Diary.getList = function(params, callback) {
 
     var sqlParams = {
         whereField: ' WHERE `diary`.is_del = -1',
-        order: '`diary`.' + params.order || '`diary`.like_count',
+        order: '`diary`.' + params.order,
         rank: ' DESC ',
         limit: ((params.page - 1) * params.pageSize) + ',' + params.pageSize
     };
