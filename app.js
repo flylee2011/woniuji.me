@@ -25,7 +25,7 @@ var isDev = (env == 'develop') ? true : false;
 // 静态文件目录
 var staticDir = isDev ? './public/dev/' : './public/dist/';
 // 监听端口号
-var listenPort = isDev ? 8001 : 1426;
+var listenPort = isDev ? 8001 : 80;
 // 域名配置
 var hostname = isDev ? 'local.woniuji.cn' : 'woniuji.cn';
 // https 证书配置
@@ -79,5 +79,5 @@ if (isDev) {
     server = app.listen(listenPort, hostname, function() {
         console.log('Running for Production...');
     });
+    https.createServer(httpsOpt, app).listen(443);
 }
-// https.createServer(httpsOpt, app).listen(443);
